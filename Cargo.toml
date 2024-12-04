@@ -6,6 +6,6 @@ documentation = "https://docs.rs/mpeg2ps"
 repository = "https://github.com/constlhq/mpeg2ps"
 authors = ["constlhq <const.lhq@gmail.com>"]
 license = "MIT"
-keywords = ["ps", "mpeg-2","ISO/IEC 13818-1"]
+keywords = ["ps", "mpeg2-ps"]
 description = "MPEG2-PS decoding/encoding library for Rust."
 [dependencies]
