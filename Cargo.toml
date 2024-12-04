@@ -1,0 +1,11 @@
+[package]
+name = "mpeg2ps"
+version = "0.1.0"
+edition = "2021"
+documentation = "https://docs.rs/mpeg2ps"
+repository = "https://github.com/constlhq/mpeg2ps"
+authors = ["constlhq <const.lhq@gmail.com>"]
+license = "MIT"
+keywords = ["ps", "mpeg-2","ISO/IEC 13818-1"]
+description = "MPEG2-PS decoding/encoding library for Rust."
+[dependencies]
