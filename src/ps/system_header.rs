@@ -1,19 +1,35 @@
-use bitfield::bitfield;
+use crate::Result;
+use std::io::Read;
+use trackable::track;
+#[derive(Default,Debug,PartialEq,Eq)]
+pub struct PsSystemHeader {
+    pub start_code: u32, //0x000001BB
+    pub header_length: u16,
+    pub rate_bound: u32, //24b
+    pub csps_flag: bool,
+    pub fixed_flag: bool,
+    pub audio_bound: u8, //6b
+    pub video_bound: u8, //5b
+    pub marker_bit: bool,
+    pub system_video_lock_flag: bool,
+    pub system_audio_lock_flag: bool,
+    pub reserved_byte: u8,
+}
 
-bitfield! {
-	struct PsSystemHeader(MSB0[u8]);
-	impl Debug;
-	u8;
-	u32,get_start_code,_:31,0;
-	u16, get_header_length,_: 47,32;
-	u32, get_rate_bound,_: 71,48;
-	bool,get_csps_flag,_:0;
-	bool,get_fixed_flag,_:0;
-	u8, get_audio_bound,_:79,74;
-	u8, get_video_bound,_:84,80;
-	bool,get_marker_bit,_: 0;
-	bool, get_system_video_lock_flag,_: 0;
-	bool,get_system_audio_lock_flag,_: 0;
-	u8,get_reserved_byte,_:95,88;
+impl PsSystemHeader {
+    pub(super) fn read_from<R: Read>(mut reader: R) -> Result<Self> {
+        // #define BUF2U16(buf) (((buf)[0] << 8) | (buf)[1])
 
+        let mut peek = [0; 12];
+        reader.read_exact(&mut peek);
+        let psize = 6 + ((peek[4] as u16) << 8 | peek[5] as u16) as usize;
+
+        println!("psize: {}", psize);
+
+        // let mut temp = [0; 12];
+        // reader.read_exact(&mut temp);
+
+        // FIXME
+        Ok(Self::default())
+    }
 }

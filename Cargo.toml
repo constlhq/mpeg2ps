@@ -12,4 +12,3 @@ description = "MPEG2-PS decoding/encoding library for Rust."
 [dependencies]
 trackable = "1.3.0"
 byteorder = "1.5.0"
-bitfield = "0.17.0"

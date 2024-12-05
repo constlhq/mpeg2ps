@@ -1,9 +1,17 @@
 use crate::{ErrorKind, Result};
+use std::fmt::Debug;
 use trackable::track_assert;
 
 /// Stream identifier.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct StreamId(u8);
+
+impl Debug for StreamId {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "StreamId(0X{:02X})", self.0)
+    }
+}
+
 impl StreamId {
     /// Minimum value of the identifiers for audio streams.
     pub const AUDIO_MIN: u8 = 0xC0;

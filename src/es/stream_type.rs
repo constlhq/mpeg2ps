@@ -1,5 +1,5 @@
-use crate::{ErrorKind, Result};
 use trackable::track_panic;
+use crate::{ErrorKind, Result};
 
 /// Elementary stream type.
 #[allow(missing_docs)]
