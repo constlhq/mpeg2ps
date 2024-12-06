@@ -158,7 +158,7 @@ pub struct Bytes {
 }
 impl Bytes {
     /// Maximum size of a byte sequence.
-    pub const MAX_SIZE: usize = 12 - 4 /* the size of the sync byte and a header */;
+    pub const MAX_SIZE: usize = u16::MAX as usize /* the size of the sync byte and a header */;
 
     /// Makes a new `Bytes` instance.
     ///

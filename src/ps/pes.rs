@@ -14,7 +14,8 @@ pub struct Pes {
 }
 impl Pes {
     pub(super) fn read_from<R: Read>(mut reader: R) -> Result<Self> {
-        let (header, pes_packet_len) = track!(PesHeader::read_from(&mut reader))?;
+        let (header, pes_packet_len, pes_header_len) = track!(PesHeader::read_from(&mut reader))?;
+        let reader = reader.take((pes_packet_len - 3 - pes_header_len as u16) as u64);
         let data = track!(Bytes::read_from(reader))?;
         Ok(Pes {
             header,

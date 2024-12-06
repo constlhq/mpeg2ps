@@ -1,7 +1,7 @@
 use crate::pes::{PesHeader, PesPacket, PesPacketReader, ReadPesPacket};
 use crate::ps::packet::{PsHeader, PsPack};
 use crate::ps::payload::{Bytes, Null, Pes};
-use crate::ps::psm::{ PsStreamMapExt};
+use crate::ps::psm::PsStreamMapExt;
 use crate::ps::system_header::{PsSystemHeader, PsSystemSystemHeaderExt};
 use crate::ps::{Pid, PsPayload};
 use crate::{track_io, ErrorKind, Result};
@@ -71,14 +71,11 @@ impl<R: Read> ReadPsPacket for PsPacketReader<R> {
                 match ty {
                     0xBA => {
                         // PS Header
-                        println!("HANDLE PS HEADER");
                         let header = track!(PsHeader::read_from(peek.chain(self.stream.by_ref())))?;
-                        println!("{:?}", header);
                         return Ok(Some(PsPack::PsHeader(header)));
                     }
                     0xBB => {
                         // PS system header
-                        println!("HANDLE PS SYSTEM HEADER");
                         let header = track!(PsSystemSystemHeaderExt::read_from(
                             peek.chain(self.stream.by_ref())
                         ))?;
@@ -87,37 +84,18 @@ impl<R: Read> ReadPsPacket for PsPacketReader<R> {
                     }
                     0xBC => {
                         // PS msp
-                        println!("HANDLE PS MAP");
                         let header =
                             track!(PsStreamMapExt::read_from(peek.chain(self.stream.by_ref())))?;
                         return Ok(Some(PsPack::PsStreamMapExt(header)));
                     }
                     0xB9 => {
-                        println!("HANDLE PS FINISH:{:?}", peek);
-
                         self.ps_pack_started = false;
 
                         return Ok(Some(PsPack::PsFinish(0x000001B9)));
                     }
                     _ => {
-                        println!("HANDLE PES HEADER");
-                        // let mut cc = Vec::from(&peek);
-                        // cc.push(x);
-                        //
-                        // println!("{:08X?}", cc);
-
-                        // let mut rrr = PesPacketReader::new(self);
-
-                        // let pes = rrr.read_pes_packet()?;
-
                         let pes = Pes::read_from(peek.chain(self.stream.by_ref()))?;
-
-                        // let pesh = track!(PesHeader::read_from(peek.chain(self.stream.by_ref())))?;
-
-                        // println!("{:?}", pes);
-
                         return Ok(Some(PsPack::Pes(pes)));
-                        continue;
                     }
                 }
             } else {
@@ -135,10 +113,4 @@ impl<R: Read> ReadPsPacket for PsPacketReader<R> {
     fn set_ps_pack_started(&mut self, state: bool) {
         self.ps_pack_started = state;
     }
-}
-
-#[derive(Debug, Clone)]
-enum PidKind {
-    Pmt,
-    Pes,
 }

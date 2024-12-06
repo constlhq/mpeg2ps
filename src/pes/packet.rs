@@ -46,7 +46,7 @@ impl PesHeader {
         3 + self.pts.map_or(0, |_| 5) + self.dts.map_or(0, |_| 5) + self.escr.map_or(0, |_| 6)
     }
 
-    pub(crate) fn read_from<R: Read>(mut reader: R) -> Result<(Self, u16)> {
+    pub(crate) fn read_from<R: Read>(mut reader: R) -> Result<(Self, u16, u8)> {
         let packet_start_code_prefix = track_io!(reader.read_uint::<BigEndian>(3))?;
         track_assert_eq!(
             packet_start_code_prefix,
@@ -56,25 +56,21 @@ impl PesHeader {
 
         let stream_id = StreamId::new(track_io!(reader.read_u8())?);
 
-        if stream_id.is_audio() {
-            println!()
-        }
-
         let packet_len = track_io!(reader.read_u16::<BigEndian>())?;
 
         let b = track_io!(reader.read_u8())?;
-        // track_assert_eq!(
-        //     b & 0b1100_0000,
-        //     0b1000_0000,
-        //     ErrorKind::InvalidInput,
-        //     "Unexpected marker bits"
-        // );
+        track_assert_eq!(
+            b & 0b1100_0000,
+            0b1000_0000,
+            ErrorKind::InvalidInput,
+            "Unexpected marker bits"
+        );
         let scrambling_control = (b & 0b0011_0000) >> 4;
         let priority = (b & 0b0000_1000) != 0;
         let data_alignment_indicator = (b & 0b0000_0100) != 0;
         let copyright = (b & 0b0000_0010) != 0;
         let original_or_copy = (b & 0b0000_0001) != 0;
-        // track_assert_eq!(scrambling_control, 0, ErrorKind::Unsupported);
+        track_assert_eq!(scrambling_control, 0, ErrorKind::Unsupported);
 
         let b = track_io!(reader.read_u8())?;
         let pts_flag = (b & 0b1000_0000) != 0;
@@ -125,7 +121,7 @@ impl PesHeader {
             dts,
             escr,
         };
-        Ok((header, packet_len))
+        Ok((header, packet_len, pes_header_len))
     }
 
     pub(crate) fn write_to<W: Write>(&self, mut writer: W, pes_header_len: u16) -> Result<()> {

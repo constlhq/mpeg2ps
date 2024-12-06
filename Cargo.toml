@@ -1,6 +1,6 @@
 [package]
 name = "mpeg2ps"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 documentation = "https://docs.rs/mpeg2ps"
 repository = "https://github.com/constlhq/mpeg2ps"
