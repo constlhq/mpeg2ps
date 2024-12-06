@@ -4,8 +4,9 @@ use std::fs::File;
 fn main() {
     let file = File::open("/home/lhq/work/2023/ezk/h265+g711a+ps.mpg").unwrap();
     let mut ps_packet_reader = PsPacketReader::new(file);
-    loop {
+    for i in 0..4 {
         let xx = ps_packet_reader.read_ps_packet();
-        xx.unwrap();
+
+        println!("{:?}", xx.unwrap());
     }
 }

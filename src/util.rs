@@ -1,5 +1,4 @@
 use crate::crc::Crc32;
-use crate::ps::PsPacket;
 use crate::{track_io, ErrorKind, Result};
 use std::io::{self, Read, Write};
 use trackable::track_assert_eq;
@@ -13,7 +12,7 @@ pub fn consume_stuffing_bytes<R: Read>(mut reader: R) -> Result<()> {
 }
 
 pub fn write_stuffing_bytes<W: Write>(mut writer: W, size: usize) -> Result<()> {
-    let buf = [0xFF; PsPacket::SIZE];
+    let buf = [0xFF; 30];
     track_io!(writer.write_all(&buf[..size]))?;
     Ok(())
 }

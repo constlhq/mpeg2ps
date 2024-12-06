@@ -41,6 +41,14 @@ impl Crc32 {
     pub fn new() -> Self {
         Crc32(0xFFFF_FFFF)
     }
+
+    pub fn from_u32(x: u32) -> Crc32 {
+        let mut v = Crc32::new();
+        let x = x.to_be_bytes();
+        v.update(&x);
+        v
+    }
+
     pub fn update(&mut self, data: &[u8]) {
         for b in data {
             let i = self.0 as u8;

@@ -1,5 +1,4 @@
 use crate::time::Timestamp;
-use crate::ps::PsPacket;
 use crate::{track_io, ErrorKind, Result};
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use std::fmt;
@@ -96,7 +95,6 @@ impl ContinuityCounter {
         self.0
     }
 
-
     pub fn increment(&mut self) {
         self.0 = (self.0 + 1) & Self::MAX;
     }
@@ -160,7 +158,7 @@ pub struct Bytes {
 }
 impl Bytes {
     /// Maximum size of a byte sequence.
-    pub const MAX_SIZE: usize = PsPacket::SIZE - 4 /* the size of the sync byte and a header */;
+    pub const MAX_SIZE: usize = 12 - 4 /* the size of the sync byte and a header */;
 
     /// Makes a new `Bytes` instance.
     ///

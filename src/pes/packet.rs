@@ -57,26 +57,24 @@ impl PesHeader {
         let stream_id = StreamId::new(track_io!(reader.read_u8())?);
 
         if stream_id.is_audio() {
-
             println!()
-
         }
 
         let packet_len = track_io!(reader.read_u16::<BigEndian>())?;
 
         let b = track_io!(reader.read_u8())?;
-        track_assert_eq!(
-            b & 0b1100_0000,
-            0b1000_0000,
-            ErrorKind::InvalidInput,
-            "Unexpected marker bits"
-        );
+        // track_assert_eq!(
+        //     b & 0b1100_0000,
+        //     0b1000_0000,
+        //     ErrorKind::InvalidInput,
+        //     "Unexpected marker bits"
+        // );
         let scrambling_control = (b & 0b0011_0000) >> 4;
         let priority = (b & 0b0000_1000) != 0;
         let data_alignment_indicator = (b & 0b0000_0100) != 0;
         let copyright = (b & 0b0000_0010) != 0;
         let original_or_copy = (b & 0b0000_0001) != 0;
-        track_assert_eq!(scrambling_control, 0, ErrorKind::Unsupported);
+        // track_assert_eq!(scrambling_control, 0, ErrorKind::Unsupported);
 
         let b = track_io!(reader.read_u8())?;
         let pts_flag = (b & 0b1000_0000) != 0;
