@@ -110,12 +110,13 @@ impl<R: Read> ReadPsPacket for PsPacketReader<R> {
 
                         // let pes = rrr.read_pes_packet()?;
 
-                        let pes = Pes::read_from(peek.chain(self.stream.by_ref()));
+                        let pes = Pes::read_from(peek.chain(self.stream.by_ref()))?;
 
                         // let pesh = track!(PesHeader::read_from(peek.chain(self.stream.by_ref())))?;
 
-                        println!("{:?}", pes);
+                        // println!("{:?}", pes);
 
+                        return Ok(Some(PsPack::Pes(pes)));
                         continue;
                     }
                 }
